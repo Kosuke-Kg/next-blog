@@ -1,11 +1,24 @@
 import { Inter } from '@next/font/google'
+import { InferGetStaticPropsType, NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { client } from '@/libs/client'
 import styles from '@/styles/Home.module.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const Home = () => {
+export const getStaticProps = async () => {
+  const data = await client.get({
+    endpoint: 'blogs',
+    contentId: 'zhp6gg68n5',
+  })
+
+  console.log(typeof data)
+
+  return { props: { data } }
+}
+
+const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({ data }) => {
   return (
     <>
       <Head>
@@ -14,6 +27,7 @@ const Home = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      {console.log(data)}
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
@@ -33,7 +47,6 @@ const Home = () => {
                 className={styles.vercelLogo}
                 width={100}
                 height={24}
-                priority
               />
             </a>
           </div>
@@ -46,10 +59,9 @@ const Home = () => {
             alt='Next.js Logo'
             width={180}
             height={37}
-            priority
           />
           <div className={styles.thirteen}>
-            <Image src='/thirteen.svg' alt='13' width={40} height={31} priority />
+            <Image src='/thirteen.svg' alt='13' width={40} height={31} />
           </div>
         </div>
 
